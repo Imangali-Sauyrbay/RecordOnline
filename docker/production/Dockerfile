@@ -28,9 +28,8 @@ COPY . .
 RUN composer install --no-scripts --no-progress \
     && rm -rf /root/.composer/cache
 
-COPY docker/production/start-container /usr/local/bin/start-container
+COPY ./start-container /usr/local/bin/start-container
 
-RUN chmod +x /usr/local/bin/start-container \
-  && cp .env.prod .env
+RUN chmod +x /usr/local/bin/start-container
 
 ENTRYPOINT [ "start-container" ]
