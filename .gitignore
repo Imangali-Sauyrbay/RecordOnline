@@ -16,15 +16,11 @@ yarn-error.log
 /.fleet
 /.idea
 /.vscode
-storage/volumes/*/data
-storage/volumes/postgress/data
-storage/volumes/redis/data
 storage/volumes/*
 /.phpunit.cache
 /node_modules
 /public/build
 /public/hot
-/public/storage
 /public/vendor
 /storage/*.key
 /vendor
