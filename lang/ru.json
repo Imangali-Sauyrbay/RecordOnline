@@ -1,0 +1,66 @@
+{
+    "Required literature": "Необходимая литература",
+    "Online record": "Онлайн запись",
+    "Select a subscription": "Выберите абонемент",
+    "Select date and time": "Выберите дату и время",
+    "Select a duration": "Выберите длительность",
+    "minutes": "минут",
+    "Record": "Записаться",
+
+    "Profile": "Профиль",
+    "Online Record": "Онлайн запись",
+    "Records": "Все записи",
+    "My Records": "Мой записи",
+    "Admin Panel": "Админ. Панель",
+    "Logout": "Выйти",
+
+    "Record was created!": "Вы успешно записались!",
+    "Languages": "Языки",
+    "en": "Английский",
+    "ru": "Русский",
+    "kk": "Казахский",
+
+    "Login": "Вход",
+    "Email Address": "Электронная почта",
+    "Password": "Пароль",
+    "Remember Me": "Запомнить",
+    "You don't have any account? Register!": "У вас ещё нет аккаунта? Создайте одну!",
+
+    "Register": "Регистрация",
+    "Full Name": "ФИО",
+    "Avatar": "Аватар",
+    "Lastname Firstname Patronomyc": "Фамилия Имя Отчество",
+    "Group": "Группа",
+    "eg. IP-19-3t": "прим. ИП-19-3т",
+    "Confirm Password": "Подтвердите пароль",
+    "You already have an account? Login!": "Уже есть аккаунт? Войдите!",
+
+    "New Password": "Новый пароль",
+
+    "Subscription": "Абонемент",
+    "User": "Пользователь",
+    "To Subscription": "К Абонементу",
+    "Duration": "Длительность",
+    "Date": "Дата",
+    "Status": "Состояние",
+
+    "Submit": "Отправить",
+    "Change": "Изменить",
+    "Send Email": "Отправить Письмо",
+
+    "Showing": "Показано от",
+    "to": "до",
+    "of": "из",
+    "results": "результатов",
+
+    "Sincerely": "С уважением",
+
+    "dates": "Пн.;Вт.;Ср.;Чт.;Пт.",
+    "Time": "Время",
+
+    "Save": "Сохранить",
+    "Search literatures": "Поиск литератур",
+    "Literatures": "Литературы",
+
+    "Records was added: #. Please refresh the website to see them!": "Добавлено записей: #. Пожалуйста обновите страницу чтобы из увидеть!"
+}

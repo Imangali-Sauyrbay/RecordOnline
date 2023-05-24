@@ -1,0 +1,79 @@
+version: '3'
+services:
+    proxy:
+      image: 'jc21/nginx-proxy-manager:latest'
+      restart: always
+      ports:
+        - '80:80'
+        - '81:81'
+        - '443:443'
+      volumes:
+        - ./storage/volumes/ngxproxy/data:/data
+        - ./storage/volumes/letsencrypt:/etc/letsencrypt
+      networks:
+        - main
+
+    laravel:
+        build:
+            context: ./
+            dockerfile: docker/production/Dockerfile
+        extra_hosts:
+            - 'host.docker.internal:host-gateway'
+        user: ${UID}:${GID}
+        environment:
+            LARAVEL_SAIL: 1
+            XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
+            XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+            IGNITION_LOCAL_SITES_PATH: '${PWD}'
+        restart: unless-stopped
+        volumes:
+            - './storage:/var/www/html/storage'
+        networks:
+            - main
+        depends_on:
+            - pgsql
+            - soketi
+
+    pgsql:
+        image: 'postgres:alpine'
+        ports:
+            - '${FORWARD_DB_PORT:-5432}:5432'
+        environment:
+            PGPASSWORD: '${DB_PASSWORD:-secret}'
+            POSTGRES_DB: '${DB_DATABASE}'
+            POSTGRES_USER: '${DB_USERNAME}'
+            POSTGRES_PASSWORD: '${DB_PASSWORD:-secret}'
+        volumes:
+            - ./storage/volumes/postgres/data:/var/lib/postgresql/data
+            - './vendor/laravel/sail/database/pgsql/create-testing-database.sql:/docker-entrypoint-initdb.d/10-create-testing-database.sql'
+        networks:
+            - main
+        healthcheck:
+            test:
+                - CMD
+                - pg_isready
+                - '-q'
+                - '-d'
+                - '${DB_DATABASE}'
+                - '-U'
+                - '${DB_USERNAME}'
+            retries: 3
+            timeout: 5s
+
+    soketi:
+        image: 'quay.io/soketi/soketi:latest-16-alpine'
+        environment:
+            SOKETI_DEBUG: '${SOKETI_DEBUG:-1}'
+            SOKETI_METRICS_SERVER_PORT: '9601'
+            SOKETI_DEFAULT_APP_ID: '${PUSHER_APP_ID}'
+            SOKETI_DEFAULT_APP_KEY: '${PUSHER_APP_KEY}'
+            SOKETI_DEFAULT_APP_SECRET: '${PUSHER_APP_SECRET}'
+        ports:
+            - '${PUSHER_PORT:-6001}:6001'
+            - '${PUSHER_METRICS_PORT:-9601}:9601'
+        networks:
+            - main
+
+networks:
+    main:
+        driver: bridge

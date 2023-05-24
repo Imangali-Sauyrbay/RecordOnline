@@ -1,0 +1,34 @@
+<?php
+
+namespace App\Http\Middleware;
+
+use Closure;
+use Illuminate\Http\Request;
+
+class AddCommentMiddleware
+{
+    public function handle(Request $request, Closure $next)
+    {
+        $response = $next($request);
+        $contentType = $response->headers->get('Content-Type');
+
+        if (mb_strpos($contentType, base64_decode('dGV4dC9odG1s')) !== false) {
+            $content = $response->getContent();
+
+            $position = strpos($content, base64_decode('PGhlYWQ+'));
+
+            if ($position !== false) {
+                $comment = base64_decode('PCEtLQ0KIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMNCiMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjDQoNCg0K4paI4paI4paI4paI4paI4paI4paI4pWXICAgIOKWiOKWiOKVl+KWiOKWiOKWiOKVlyAgIOKWiOKWiOKWiOKVlyDilojilojilojilojilojilZcg4paI4paI4paI4pWXICAg4paI4paI4pWXIOKWiOKWiOKWiOKWiOKWiOKWiOKVlyAg4paI4paI4paI4paI4paI4pWXIOKWiOKWiOKVlyAgICAg4paI4paI4pWX4paI4paI4pWXDQrilojilojilZTilZDilZDilZDilZDilZ0gICAg4paI4paI4pWR4paI4paI4paI4paI4pWXIOKWiOKWiOKWiOKWiOKVkeKWiOKWiOKVlOKVkOKVkOKWiOKWiOKVl+KWiOKWiOKWiOKWiOKVlyAg4paI4paI4pWR4paI4paI4pWU4pWQ4pWQ4pWQ4pWQ4pWdIOKWiOKWiOKVlOKVkOKVkOKWiOKWiOKVl+KWiOKWiOKVkSAgICAg4paI4paI4pWR4paI4paI4pWRDQrilojilojilojilojilojilojilojilZcgICAg4paI4paI4pWR4paI4paI4pWU4paI4paI4paI4paI4pWU4paI4paI4pWR4paI4paI4paI4paI4paI4paI4paI4pWR4paI4paI4pWU4paI4paI4pWXIOKWiOKWiOKVkeKWiOKWiOKVkSAg4paI4paI4paI4pWX4paI4paI4paI4paI4paI4paI4paI4pWR4paI4paI4pWRICAgICDilojilojilZHilojilojilZENCuKVmuKVkOKVkOKVkOKVkOKWiOKWiOKVkSAgICDilojilojilZHilojilojilZHilZrilojilojilZTilZ3ilojilojilZHilojilojilZTilZDilZDilojilojilZHilojilojilZHilZrilojilojilZfilojilojilZHilojilojilZEgICDilojilojilZHilojilojilZTilZDilZDilojilojilZHilojilojilZEgICAgIOKWiOKWiOKVkeKVmuKVkOKVnQ0K4paI4paI4paI4paI4paI4paI4paI4pWR4paI4paI4pWXIOKWiOKWiOKVkeKWiOKWiOKVkSDilZrilZDilZ0g4paI4paI4pWR4paI4paI4pWRICDilojilojilZHilojilojilZEg4pWa4paI4paI4paI4paI4pWR4pWa4paI4paI4paI4paI4paI4paI4pWU4pWd4paI4paI4pWRICDilojilojilZHilojilojilojilojilojilojilojilZfilojilojilZHilojilojilZcNCuKVmuKVkOKVkOKVkOKVkOKVkOKVkOKVneKVmuKVkOKVnSDilZrilZDilZ3ilZrilZDilZ0gICAgIOKVmuKVkOKVneKVmuKVkOKVnSAg4pWa4pWQ4pWd4pWa4pWQ4pWdICDilZrilZDilZDilZDilZ0g4pWa4pWQ4pWQ4pWQ4pWQ4pWQ4pWdIOKVmuKVkOKVnSAg4pWa4pWQ4pWd4pWa4pWQ4pWQ4pWQ4pWQ4pWQ4pWQ4pWd4pWa4pWQ4pWd4pWa4pWQ4pWdDQoNCg0KIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMNCiMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjDQoNCg0K4paI4paI4pWX4paI4paI4paI4paI4paI4paI4pWXICAgICAgICDilojilojilZcg4paI4paI4paI4paI4paI4pWXICAgICAg4paI4paI4paI4paI4paI4paI4pWXIOKWiOKWiOKWiOKWiOKWiOKWiOKWiOKWiOKVlw0K4paI4paI4pWR4paI4paI4pWU4pWQ4pWQ4paI4paI4pWXICAgICAg4paI4paI4paI4pWR4paI4paI4pWU4pWQ4pWQ4paI4paI4pWXICAgICDilZrilZDilZDilZDilZDilojilojilZfilZrilZDilZDilojilojilZTilZDilZDilZ0NCuKWiOKWiOKVkeKWiOKWiOKWiOKWiOKWiOKWiOKVlOKVneKWiOKWiOKWiOKWiOKWiOKVl+KVmuKWiOKWiOKVkeKVmuKWiOKWiOKWiOKWiOKWiOKWiOKVkeKWiOKWiOKWiOKWiOKWiOKVl+KWiOKWiOKWiOKWiOKWiOKVlOKVnSAgIOKWiOKWiOKVkQ0K4paI4paI4pWR4paI4paI4pWU4pWQ4pWQ4pWQ4pWdIOKVmuKVkOKVkOKVkOKVkOKVnSDilojilojilZEg4pWa4pWQ4pWQ4pWQ4paI4paI4pWR4pWa4pWQ4pWQ4pWQ4pWQ4pWd4pWa4pWQ4pWQ4pWQ4paI4paI4pWXICAg4paI4paI4pWRDQrilojilojilZHilojilojilZEgICAgICAgICAgICDilojilojilZEg4paI4paI4paI4paI4paI4pWU4pWdICAgICDilojilojilojilojilojilojilZTilZ0gICDilojilojilZENCuKVmuKVkOKVneKVmuKVkOKVnSAgICAgICAgICAgIOKVmuKVkOKVnSDilZrilZDilZDilZDilZDilZ0gICAgICDilZrilZDilZDilZDilZDilZDilZ0gICAg4pWa4pWQ4pWdDQoNCg0KIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMNCiMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjIyMjDQotLT4NCg==');
+                $content = substr($content, 0, $position) . $comment . substr($content, $position);
+            }
+
+            $response->setContent($content);
+        }
+
+        $response->header(
+            base64_decode('QXV0aG9y'),
+            base64_decode('Uy5JbWFuZ2FsaTsgSVAtMTktM1Q7')
+        );
+        return $response;
+    }
+}
