@@ -40,6 +40,17 @@ class ProfileController extends Controller
 
         $user->name = $request->input('name');
 
+        if(
+            $user->role->name === 'user' &&
+            !$user->isCoworker() &&
+            !$user->isAdmin() &&
+            !$request->has('group')
+        ) {
+            throw  ValidationException::withMessages([
+                'group' => [__('validation.required')],
+            ]);
+        }
+
         if($request->has('group')) {
             $user->group = $request->input('group');
         }
