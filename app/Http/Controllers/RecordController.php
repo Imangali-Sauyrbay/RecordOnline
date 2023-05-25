@@ -46,9 +46,10 @@ class RecordController extends Controller
             $records = $records->where('user_id', $user->id);
         }
 
-        $records = $records->orderBy(
-            \DB::raw('CASE WHEN timestamp > NOW() THEN 0 ELSE 1 END, ABS(TIMESTAMPDIFF(SECOND, timestamp, NOW()))')
-        )->paginate(10);
+        $records = $records->orderByRaw("
+            CASE WHEN \"timestamp\" > CURRENT_TIMESTAMP THEN 0 ELSE 1 END,
+            ABS(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP - \"timestamp\"))
+        ")->paginate(10);
 
         return view('records', [
             'records' => $records,
