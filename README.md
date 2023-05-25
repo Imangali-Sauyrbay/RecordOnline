@@ -102,6 +102,8 @@ cp .env.prod .env
 
 # Add key to .env file
 nano .env
+
+#!!! DON'T USE IT. IT IS JUST AN EXAMPLE. GENERATE NEW ONE
 #APP_KEY=base64:aHI5YXQ2Z2F6Znp5eDU1NWR0c2d6M2FjMTF5NDFnNjY=
 
 # Change app url
@@ -153,7 +155,10 @@ curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
 # Reopen terminal
 
 nvm install --lts
+```
 
+### Install dependencies
+```bash
 cd /var/www/html
 
 npm ci
@@ -190,7 +195,7 @@ docker-compose -f docker-compose.prod.yml down
 
 <br />
 
-### Setup database
+### Rebuild and start the server and Setup database
 ```bash
 #Enter to the shell
 docker-compose -f docker-compose.prod.yml exec laravel sh
@@ -211,13 +216,16 @@ php artisan db:seed
 
 php artisan voyager:admin your@email.com --create
 
+# Make sure to reload server
+php artisan octane:reload
+
 # To exit shell
 
 exit
 ```
 
 ### Edit proxy.
-1. Go to the siteurl:81 or if you changed PROXY_PORT to siteurl:(paste here PROXY_PORT)
+1. Go to the host_ip:81 or if you changed PROXY_PORT to host_ip:(paste here PROXY_PORT)
 
 1.  Credentials:
 Email:    admin@example.com
@@ -236,9 +244,11 @@ Password: changeme
 1. Forward host name: "laravel"
 1. Enter port (By default 80)
 
-1. Enable: Cache assets, Block Common Exploits, Websocket Support
+1. Enable: Cache assets, Block Common Exploits
 
 1. Go to tab SSL
+
+1. SSL Certificate
 
 1. Request new SSL
 
@@ -249,6 +259,8 @@ Password: changeme
 1. Wait until it saves
 
 #### Add proxy to websocket server
+
+1. Add Proxy Host
 
 1. Enter Domain name from which requests will come (firstly forward domain name to ip of host computer) and press enter to save.
 
@@ -267,15 +279,21 @@ Password: changeme
 
 1. Wait until it saves
 
+#### If you want, you can additionaly add proxy url to manager
+1. Just add domain like sub-proxy.domain.com.
+1. forward it to localhost:81
+1. enable Cache assets, Block Common Exploits, Force SSL, HTTP/2
+1. enable ssl and save
+
 
 ### And finally, edit admin panel.
 
-1. Go to /admin
+1. Go to siteurl/admin
 1. Log in to your account
-1. Go to the BREAD page
+1. Go to the BREAD page (in the Instruments)
 1. Edit recors_statuses
 1. Save without changes
-1. Go to Roles and change admin
+1. Go to Roles and edit admin
 1. Give all permission to Record Status
 1. Go to the BREAD page
 1. Add BREAD to subscriptions

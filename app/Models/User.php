@@ -64,6 +64,10 @@ class User extends \TCG\Voyager\Models\User
         return $this->isRoleContains('admin');
     }
 
+    public function isUser() {
+        return $this->isRoleContains('user');
+    }
+
     private function isRoleContains($name) {
         return $this->roles->pluck('name')->contains($name) ||
         $this->role->name === $name;

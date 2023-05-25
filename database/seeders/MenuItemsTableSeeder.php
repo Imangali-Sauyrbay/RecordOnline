@@ -191,5 +191,21 @@ class MenuItemsTableSeeder extends Seeder
                 'order'      => 15,
             ])->save();
         }
+
+        $menuItem = MenuItem::firstOrNew([
+            'menu_id' => $menu->id,
+            'title'   => __('Reload Server'),
+            'url'     => '',
+            'route'   => 'server.reload',
+        ]);
+        if (!$menuItem->exists) {
+            $menuItem->fill([
+                'target'     => '_self',
+                'icon_class' => 'voyager-refresh',
+                'color'      => null,
+                'parent_id'  => null,
+                'order'      => 16,
+            ])->save();
+        }
     }
 }

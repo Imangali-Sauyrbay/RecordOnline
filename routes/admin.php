@@ -1,5 +1,7 @@
 <?php
 
+use TCG\Voyager\Models\Role;
+
 Voyager::routes();
 
 Route::prefix('group')->group(function () {
@@ -7,3 +9,5 @@ Route::prefix('group')->group(function () {
     Route::post('delete', 'DeleteUsersController@delete')->name('delete.users.delete');
     Route::post('restore', 'DeleteUsersController@restore')->name('delete.users.restore');
 });
+
+Route::get('/server/reload', 'ServerController@reload')->name('server.reload');

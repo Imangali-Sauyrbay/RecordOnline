@@ -2,12 +2,13 @@
 
 namespace App\Providers;
 
-use App\Listeners\ReloadRoutesListener;
+use App\Events\ReloadServerEvent;
+use App\Listeners\ReloadServer;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 use TCG\Voyager\Events\BreadAdded;
+use TCG\Voyager\Events\SettingUpdated;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -22,8 +23,16 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         BreadAdded::class => [
-            ReloadRoutesListener::class,
+            ReloadServer::class,
         ],
+
+        SettingUpdated::class => [
+            ReloadServer::class,
+        ],
+
+        ReloadServerEvent::class => [
+            ReloadServer::class,
+        ]
     ];
 
     /**

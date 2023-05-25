@@ -8,6 +8,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ setting('site.title') }}</title>
+    <meta name="title" content="{{ setting('site.title') }}">
+    <meta name="description" content="{{ setting('site.description') }}">
 
     <!-- Favicon -->
     <link rel="icon" href="{{asset('storage/logo.svg')}}" sizes="any" type="image/svg+xml">

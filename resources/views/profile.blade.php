@@ -55,15 +55,15 @@
                                 :required="false"
                                 />
 
-                                @if(!auth()->user()->isCoworker())
-                                <x-form-field
-                                title='Group'
-                                name='group'
-                                type='text'
-                                class='mb-3'
-                                value='{{auth()->user()->group}}'
-                                :required="false"
-                                />
+                                @if(auth()->user()->isUser())
+                                    <x-form-field
+                                    title='Group'
+                                    name='group'
+                                    type='text'
+                                    class='mb-3'
+                                    value='{{auth()->user()->group}}'
+                                    :required="false"
+                                    />
                                 @endif
 
                                 <x-form-field
