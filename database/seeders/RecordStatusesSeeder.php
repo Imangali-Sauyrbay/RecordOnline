@@ -34,7 +34,7 @@ class RecordStatusesSeeder extends Seeder
                     'kk' => 'Келіңіз, біз сізді күтеміз!',
                 ],
 
-                'status' => RecordStatus::SECONDARY
+                'status' => RecordStatus::SUCCESS
             ],
 
             [
