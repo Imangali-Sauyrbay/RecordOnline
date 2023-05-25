@@ -4,6 +4,14 @@ ___
 1. git-all
 1. docker
 1. docker-compose
+
+### Domains
+#### For main site
+1. sub.domain.com
+#### For websocket server
+1. sub-ws.domain.com
+
+PS: Self hosted node.js ws server was used, cuz php not have ws connection... yet.
 ___
 <br />
 
@@ -96,7 +104,11 @@ cp .env.prod .env
 nano .env
 #APP_KEY=base64:aHI5YXQ2Z2F6Znp5eDU1NWR0c2d6M2FjMTF5NDFnNjY=
 
-# BTW change app url
+# Change app url
+
+#APP_URL=https://sub.domain.com
+#VITE_PUSHER_HOST=sub-ws.domain.com
+#DB_PASSWORD=somehardpass
 ```
 
 <br />
@@ -124,9 +136,7 @@ nano .env
 
 ```
 
-### Don't forget to set also hard database password
-
-<br />
+<br/>
 
 ___
 ## Disable any servers (Apache, Nginx etc) if ports conflict or change port
@@ -147,20 +157,35 @@ nvm install --lts
 cd /var/www/html
 
 npm ci
-
-npm run build
 ```
 
 ### Build assets
 
 ```sh
-
+npm run build
 ```
 
-### Start the server
+### To start the server
 
 ```bash
 docker-compose -f docker-compose.prod.yml up -d
+```
+
+<br />
+
+
+### To rebuild and start the server
+
+```bash
+docker-compose -f docker-compose.prod.yml up -d --build
+```
+
+<br />
+
+### To stop the server
+
+```bash
+docker-compose -f docker-compose.prod.yml down
 ```
 
 <br />
@@ -192,7 +217,6 @@ exit
 ```
 
 ### Edit proxy.
-
 1. Go to the siteurl:81 or if you changed PROXY_PORT to siteurl:(paste here PROXY_PORT)
 
 1.  Credentials:
@@ -205,12 +229,33 @@ Password: changeme
 
 1. Add Proxy Host
 
-1. Enter Domain name from which requests will come (first forward domain name to ip of host computer) and press enter to save.
+#### Add proxy to main site
 
-1. Forward host name: laravel
+1. Enter Domain name from which requests will come (firstly forward domain name to ip of host computer) and press enter to save.
+
+1. Forward host name: "laravel"
 1. Enter port (By default 80)
 
 1. Enable: Cache assets, Block Common Exploits, Websocket Support
+
+1. Go to tab SSL
+
+1. Request new SSL
+
+1. Enable Force SSL, HTTP/2
+
+1. Press Save button
+
+1. Wait until it saves
+
+#### Add proxy to websocket server
+
+1. Enter Domain name from which requests will come (firstly forward domain name to ip of host computer) and press enter to save.
+
+1. Forward host name: "soketi"
+1. Enter port (By default 6001)
+
+1. Enable: Block Common Exploits, Websocket Support
 
 1. Go to tab SSL
 
