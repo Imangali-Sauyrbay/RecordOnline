@@ -70,6 +70,7 @@
                                 title='Avatar'
                                 name='avatar'
                                 type='file'
+                                accept="image/*"
                                 class='mb-3'
                                 :required="false"
                                 />
