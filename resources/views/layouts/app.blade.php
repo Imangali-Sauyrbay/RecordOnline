@@ -23,7 +23,7 @@
         @auth
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm p-0">
             <div class="container d-flex justify-content-between p-1">
-                <a href="/"><img src="{{asset('storage/full-logo.svg')}}" alt="Logo" class="image" style="width: 200px; height: 50px; object-fit: contain;"></a>
+                <a href="/"><img src="{{asset('storage/full-logo.svg')}}" alt="Logo" class="image" style="width: 150px; height: 50px; object-fit: contain;"></a>
 
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
