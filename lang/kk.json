@@ -19,5 +19,51 @@
     "ru": "Орысша",
     "kk": "Қазақшы",
 
-    "Subscription": "Абонемент"
+    "Subscription": "Абонемент",
+
+    "Profile": "Профиль",
+
+    "Login": "Кіру",
+    "Email Address": "Электронды пошта",
+    "Password": "Құпия сөз",
+    "Remember Me": "Аккаунтта қалу",
+    "You don't have any account? Register!": "Сізде әлі аккаунт жоқ па? Тіркеліңіз!",
+
+    "Register": "Тіркелу",
+    "Full Name": "Аты-Жөні",
+    "Avatar": "Аватар",
+    "Lastname Firstname Patronomyc": "Тегі Аты Жөні",
+    "Group": "Топ",
+    "eg. IP-19-3t": "мыс. ИП-19-3т",
+    "Confirm Password": "Парольді қайталаңыз",
+    "You already have an account? Login!": "Аккаунтіңіз бар ма? Кіріңіз!",
+
+    "New Password": "Жаңа пароль",
+
+    "User": "Қолданушы",
+    "To Subscription": "Абонементке",
+    "Duration": "Ұзактығы",
+    "Date": "Күні",
+    "Status": "Қазіргі күйі",
+
+    "Submit": "Жіберу",
+    "Change": "Өзгерту",
+    "Send Email": "Хат Жіберу",
+
+    "Showing": "Көрсетілгені: ",
+    "to": "-",
+    "of": " ",
+    "results": "нәтиежеден",
+
+    "Sincerely": "Құрметпен",
+
+    "dates": "Дб.;Сб.;Ср.;Бс.;Жм.",
+    "Time": "Уақыт",
+
+    "Save": "Сақтау",
+    "Search literatures": "Әдебиет іздеу",
+    "Literatures": "Әдебиеттер",
+
+    "Records was added: #. Please refresh the website to see them!": "Жазылымдар қосылда: #. Оларды көру үшін сайтты жаңартыңыз!",
+    "This account was deleted.": "Бұл аккаунт жадыдан өшірілген!"
 }

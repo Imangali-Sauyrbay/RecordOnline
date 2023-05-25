@@ -301,3 +301,9 @@ Password: changeme
 1. Save it.
 1. View it and add some Subscriptions (Абонементы)
 1. Edit config as you want
+
+#### if your memory is full try force delete all docker caches/images/layers (You need rebuild after this!!!)
+##### it wont remove server datas like proxy config / data from database. It all stored in ./storage/volumes in server folder! 
+```bash
+docker system prune --all --force
+```
