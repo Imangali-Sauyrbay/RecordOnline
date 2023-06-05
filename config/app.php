@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Facade;
 
+$ws = env('WS', true);
+
 return [
 
     /*
@@ -16,6 +18,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'ws' => $ws,
 
     /*
     |--------------------------------------------------------------------------
@@ -155,7 +158,7 @@ return [
     |
     */
 
-    'providers' => [
+    'providers' => array_merge([
 
         /*
          * Laravel Framework Service Providers...
@@ -186,17 +189,15 @@ return [
         /*
          * Package Service Providers...
          */
-
+        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
         /*
          * Application Service Providers...
          */
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
-        App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
-        Barryvdh\LaravelIdeHelper\IdeHelperServiceProvider::class,
-    ],
+    ], $ws ? [App\Providers\BroadcastServiceProvider::class] : []),
 
     /*
     |--------------------------------------------------------------------------

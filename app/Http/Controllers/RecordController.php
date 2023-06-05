@@ -37,11 +37,17 @@ class RecordController extends Controller
         }
 
         $records = Record::with(['recordStatus', 'recordStatus.translations', 'user', 'subscription']);
+        $recordsCount = null;
 
         if($user->isCoworker()) {
             $records = $records->where(
                 'subscription_id', $user->subscription->id
             );
+
+            $recordsCount =  Record::where(
+                'subscription_id',
+                Subscription::find($user->subscription_id)->id
+            )->count();
         } else {
             $records = $records->where('user_id', $user->id);
         }
@@ -53,9 +59,14 @@ class RecordController extends Controller
 
         return view('records', [
             'records' => $records,
+            'recordsCount' => $recordsCount,
             'tz' => $data['tz'],
             'statuses' => RecordStatus::withTranslations()->get(),
         ]);
+    }
+
+    public function count($lang, $sub) {
+        return response()->json(['count' => Record::where('subscription_id', $sub)->count()]);
     }
 
     /**
@@ -109,7 +120,10 @@ class RecordController extends Controller
             'record_status_id' => $status->id
         ]);
 
-        RecordAdded::dispatch($data['subscription']);
+        if(config('app.ws')){
+            RecordAdded::dispatch($data['subscription']);
+        }
+
         return back()->with('success', trans('Record was created!'));
     }
 

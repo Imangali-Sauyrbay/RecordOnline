@@ -6,6 +6,7 @@ Route::get('/records', 'RecordController@index')->name('record.index');
 Route::get('/record', 'RecordController@create')->name('record.create');
 
 Route::get('/record/lits', 'RecordController@search')->name('record.lits');
+Route::get('/record/{sub}/count', 'RecordController@count')->name('records.count');
 
 Route::redirect('/', '/record', 301);
 

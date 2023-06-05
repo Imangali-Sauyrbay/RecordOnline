@@ -45,14 +45,24 @@
     </script>
 
     @if(auth()->user()->isCoworker())
-        @vite(['resources/js/recordsWs.js'])
+        @php
+            $sub = auth()->user()->subscription->id;
+        @endphp
 
         <script>
-            window.subscriptionId = {{auth()->user()->subscription->id}}
+            window.subscriptionId = {{ $sub }}
+            window.records = {{ $recordsCount }}
+            window.route = "{{ localizedRoute('records.count', ['sub' => $sub]) }}"
             window.lang = {
                 addedMsg: "{{__('Records was added: #. Please refresh the website to see them!')}}"
             }
         </script>
+
+        @if(config('app.ws'))
+            @vite(['resources/js/recordsWs.js'])
+        @else
+            @vite(['resources/js/records.js'])
+        @endif
     @endif
 @endsection
 

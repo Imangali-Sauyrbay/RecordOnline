@@ -1,3 +1,12 @@
+FROM node:18.14.2-alpine3.17 as build
+
+WORKDIR /app
+
+COPY . .
+
+RUN npm ci \
+    && npm run build
+
 FROM phpswoole/swoole:php8.2-alpine
 
 ENV TZ=UTC
@@ -24,6 +33,7 @@ RUN apk --update add wget \
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 COPY . .
+COPY --from=build /app/public/build public/build
 
 RUN composer install --no-scripts --no-progress \
     && rm -rf /root/.composer/cache

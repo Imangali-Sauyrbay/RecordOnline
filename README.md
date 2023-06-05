@@ -1,3 +1,19 @@
+# Ways to host server:
+### 1) With docker compose by using node.js websocket server
+
+### 2) With docker compose WITHOUT using node.js websocket server
+
+### 3) On the apache server as an standart laravel app
+
+### 4) On the nginx server as an standart laravel app
+---
+## Notice!
+This server uses [soketi](https://docs.soketi.app) as a websoket server. so you need to host it too. Or just use pre-configured docker. <br/>
+**BUT** you can disable it with environment variable WS and set prefered time for long polling!
+
+---
+# Steps to host in docker container:
+
 ## Setup your linux server
 ___
 ### Prequisits:
@@ -135,7 +151,8 @@ nano .env
 #FORWARD_DB_PORT=5432
 #PUSHER_PORT=6001
 #PUSHER_METRICS_PORT=9601
-
+#WS=true
+#VITE_POLLING_SECONDS=5
 ```
 
 <br/>
@@ -146,34 +163,14 @@ ___
 
 <br />
 
-### Install nvm and node
-
-```bash
-sudo apt install curl
-curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-
-# Reopen terminal
-
-nvm install --lts
-```
-
-### Install dependencies
-```bash
-cd /var/www/html
-
-npm ci
-```
-
-### Build assets
-
-```sh
-npm run build
-```
-
 ### To start the server
 
+- plain - only server and database
+- proxy - adds proxy that can server over https, block common exploits and caches data
+- ws - adds proxy and websocket server soketi
+
 ```bash
-docker-compose -f docker-compose.prod.yml up -d
+docker-compose -f docker-compose.prod.[ws/proxy/plain].yml up -d
 ```
 
 <br />
@@ -182,7 +179,7 @@ docker-compose -f docker-compose.prod.yml up -d
 ### To rebuild and start the server
 
 ```bash
-docker-compose -f docker-compose.prod.yml up -d --build
+docker-compose -f docker-compose.prod.[ws/proxy/plain].yml up -d --build
 ```
 
 <br />
@@ -190,7 +187,7 @@ docker-compose -f docker-compose.prod.yml up -d --build
 ### To stop the server
 
 ```bash
-docker-compose -f docker-compose.prod.yml down
+docker-compose -f docker-compose.prod.[ws/proxy/plain].yml down
 ```
 
 <br />
@@ -198,7 +195,7 @@ docker-compose -f docker-compose.prod.yml down
 ### Rebuild and start the server and Setup database
 ```bash
 #Enter to the shell
-docker-compose -f docker-compose.prod.yml exec laravel sh
+docker-compose -f docker-compose.prod.ws.yml exec laravel sh
 
 # In the shell
 
@@ -285,8 +282,162 @@ Password: changeme
 1. enable Cache assets, Block Common Exploits, Force SSL, HTTP/2
 1. enable ssl and save
 
+#### if your memory is full try force delete all docker caches/images/layers (You need rebuild after this!!!)
+##### it wont remove server datas like proxy config / data from database. It all stored in ./storage/volumes in server folder! 
+```bash
+docker system prune --all --force
+```
 
-### And finally, edit admin panel.
+<br/>
+<br/>
+
+# Steps to host on apache2:
+
+1. **Prerequisites**:
+   - Make sure you have Apache web server installed and running.
+   - Ensure that PHP is installed on your server and configured properly.
+
+2. **Clone or Upload the Laravel Application**:
+   - Clone your Laravel application repository to your server's desired location or upload the application files to your server using FTP or any other method.
+
+3. **Install Dependencies**:
+   - Navigate to the root directory of your Laravel application.
+   - Run `composer install` to install the required dependencies.
+
+4. **Configure Apache Virtual Host**:
+   - Create an Apache virtual host configuration file for your Laravel application. You can create a new file, such as `laravel-app.conf`, in the Apache configuration directory or modify the default configuration file.
+   - Add the following configuration to the virtual host file:
+
+      ```apache
+      <VirtualHost *:80>
+          ServerName your-domain-or-ip
+          DocumentRoot /path/to/laravel-app/public
+
+          <Directory /path/to/laravel-app/public>
+              AllowOverride All
+              Options FollowSymlinks
+              Require all granted
+          </Directory>
+
+          ErrorLog ${APACHE_LOG_DIR}/laravel-app-error.log
+          CustomLog ${APACHE_LOG_DIR}/laravel-app-access.log combined
+      </VirtualHost>
+      ```
+
+      Replace `your-domain-or-ip` with your actual domain name or server IP address, and `/path/to/laravel-app` with the path to your Laravel application directory.
+
+5. **Enable the Virtual Host**:
+   - Enable the Laravel application virtual host by creating a symbolic link in the Apache `sites-enabled` directory. Run the following command:
+
+      ```bash
+      sudo ln -s /etc/apache2/sites-available/laravel-app.conf /etc/apache2/sites-enabled/
+      ```
+
+      Replace `/etc/apache2/sites-available/laravel-app.conf` with the actual path to your virtual host configuration file.
+
+6. **Enable Required Apache Modules**:
+   - Enable the necessary Apache modules by running the following commands:
+
+      ```bash
+      sudo a2enmod rewrite
+      sudo service apache2 restart
+      ```
+
+7. **Set Proper File Permissions**:
+   - Ensure that the appropriate permissions are set for Laravel directories. Run the following commands from your Laravel application root directory:
+
+      ```bash
+      sudo chown -R www-data:www-data storage bootstrap/cache
+      sudo chmod -R 775 storage bootstrap/cache
+      ```
+
+8. **Restart Apache**:
+   - Restart the Apache server to apply the changes:
+
+      ```bash
+      sudo service apache2 restart
+      ```
+
+9. **Access Your Laravel Application**:
+   - Now, you should be able to access your Laravel application by visiting the domain or IP address you specified in the virtual host configuration.
+
+<br/>
+<br/>
+
+# Steps to host on nginx server:
+
+1. **Prerequisites**:
+   - Make sure you have Nginx web server installed and running.
+   - Ensure that PHP is installed on your server and configured properly.
+
+2. **Clone or Upload the Laravel Application**:
+   - Clone your Laravel application repository to your server's desired location or upload the application files to your server using FTP or any other method.
+
+3. **Install Dependencies**:
+   - Navigate to the root directory of your Laravel application.
+   - Run `composer install` to install the required dependencies.
+
+4. **Configure Nginx**:
+   - Locate the Nginx configuration directory. It is typically located in `/etc/nginx/conf.d/` or `/etc/nginx/sites-available/`.
+   - Create a new configuration file, such as `laravel-app.conf`, in the Nginx configuration directory or modify the default configuration file.
+   - Add the following configuration to the file:
+
+      ```nginx
+      server {
+          listen 80;
+          server_name your-domain-or-ip;
+          root /path/to/laravel-app/public;
+          index index.php;
+
+          location / {
+              try_files $uri $uri/ /index.php?$query_string;
+          }
+
+          location ~ \.php$ {
+              include fastcgi_params;
+              fastcgi_pass unix:/run/php/php7.4-fpm.sock;  # Modify the PHP version if necessary
+              fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+              fastcgi_param PATH_INFO $fastcgi_path_info;
+          }
+      }
+      ```
+
+      Replace `your-domain-or-ip` with your actual domain name or server IP address, and `/path/to/laravel-app` with the path to your Laravel application directory.
+
+5. **Enable the Configuration**:
+   - If you created a new configuration file, create a symbolic link in the Nginx `sites-enabled` directory. Run the following command:
+
+      ```bash
+      sudo ln -s /etc/nginx/conf.d/laravel-app.conf /etc/nginx/sites-enabled/
+      ```
+
+      Replace `/etc/nginx/conf.d/laravel-app.conf` with the actual path to your configuration file.
+
+6. **Restart Nginx**:
+   - Restart the Nginx server to apply the changes:
+
+      ```bash
+      sudo service nginx restart
+      ```
+
+7. **Set Proper File Permissions**:
+   - Ensure that the appropriate permissions are set for Laravel directories. Run the following commands from your Laravel application root directory:
+
+      ```bash
+      sudo chown -R www-data:www-data storage bootstrap/cache
+      sudo chmod -R 775 storage bootstrap/cache
+      ```
+
+8. **Access Your Laravel Application**:
+   - Now, you should be able to access your Laravel application by visiting the domain or IP address you specified in the Nginx configuration.
+
+
+<br/>
+<br/>
+<br/>
+
+
+# And finally, edit admin panel.
 
 1. Go to siteurl/admin
 1. Log in to your account
@@ -301,9 +452,3 @@ Password: changeme
 1. Save it.
 1. View it and add some Subscriptions (Абонементы)
 1. Edit config as you want
-
-#### if your memory is full try force delete all docker caches/images/layers (You need rebuild after this!!!)
-##### it wont remove server datas like proxy config / data from database. It all stored in ./storage/volumes in server folder! 
-```bash
-docker system prune --all --force
-```
