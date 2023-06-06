@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
+use App\Services\SheduledDelete;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class DeleteUsersController extends Controller
@@ -58,7 +60,7 @@ class DeleteUsersController extends Controller
 
         User::where('group', 'like', $this->getValidGroup($request))->delete();
 
-        return back()->with($this->alert(__('Users was deleted!'), 'success'));
+        return back()->with($this->alertSuccess(__('Users was trashed!')));
     }
 
     public function restore(Request $request) {
@@ -70,7 +72,31 @@ class DeleteUsersController extends Controller
         ->where('group', 'like', $this->getValidGroup($request))
         ->restore();
 
-        return back()->with($this->alert(__('Users was restored!'), 'success'));
+        return back()->with($this->alertSuccess(__('Users was restored!')));
+    }
+
+    public function deleteRecords(Request $request) {
+        /** @var User */
+        $user = auth()->user();
+        if(!$user->isAdmin()) return redirect(RouteServiceProvider::HOME);
+
+        $lessThan = $this->getTime(trim($request->input('time', 'week')));
+
+        $deletedCount = SheduledDelete::deleteRecords($lessThan);
+
+        return back()->with($this->alertSuccess(trans_choice('admin.deleted', $deletedCount)));
+    }
+
+    public function deleteUsers(Request $request) {
+        /** @var User */
+        $user = auth()->user();
+        if(!$user->isAdmin()) return redirect(RouteServiceProvider::HOME);
+
+        $lessThan = $this->getTime(trim($request->input('time', 'week')));
+
+        $deletedCount = SheduledDelete::deleteUsers($lessThan);
+
+        return back()->with($this->alertSuccess(trans_choice('admin.deleted', $deletedCount)));
     }
 
     protected function getValidGroup($request) {
@@ -102,5 +128,34 @@ class DeleteUsersController extends Controller
     protected function alertSuccess($message)
     {
         return $this->alert($message, 'success');
+    }
+
+    protected function getTime(string $time)
+    {
+        if($time === 'year')
+            return Carbon::now()->subYear();
+
+        if($time === 'six_month')
+            return Carbon::now()->subMonths(6);
+
+        if($time === 'three_month')
+            return Carbon::now()->subMonths(3);
+
+        if($time === 'month')
+            return Carbon::now()->subMonth();
+
+        if($time === 'week')
+            return Carbon::now()->subWeek();
+
+        if($time === 'day')
+            return Carbon::now()->subDay();
+
+        if($time === 'hour')
+            return Carbon::now()->subHour();
+
+        if($time === 'minute')
+            return Carbon::now()->subMinute();
+
+        return Carbon::now()->subWeek();
     }
 }

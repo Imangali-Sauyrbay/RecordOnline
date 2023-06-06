@@ -4,6 +4,7 @@ namespace App\Console;
 
 use App\Models\Record;
 use App\Models\User;
+use App\Services\SheduledDelete;
 use Carbon\Carbon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
@@ -21,27 +22,17 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(function() {
             $weekAgo = Carbon::now()->subWeek();
-            Record::whereDate('timestamp', '<', $weekAgo)->delete();
-        })->dailyAt('06:00');
+            SheduledDelete::deleteRecords($weekAgo);
+        })
+        ->dailyAt('06:00');
 
         $schedule->call(function() {
             $yearAgo = Carbon::now()->subYear();
-
-            $users = User::onlyTrashed()
-                ->whereDate('deleted_at', '<', $yearAgo)
-                ->get();
-
-            foreach ($users as $user) {
-                if(Storage::disk('public')->fileExists($user->avatar)
-                && !mb_ereg_match('.*default.png$', $user->avatar)) {
-                    Storage::disk('public')->delete($user->avatar);
-                }
-            }
-
-            User::onlyTrashed()
-                ->whereDate('deleted_at', '<', $yearAgo)
-                ->forceDelete();
-        })->weekly()->saturdays()->at('06:00');
+            SheduledDelete::deleteUsers($yearAgo);
+        })
+        ->weekly()
+        ->saturdays()
+        ->at('06:00');
     }
 
     /**

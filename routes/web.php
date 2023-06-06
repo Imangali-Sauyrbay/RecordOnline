@@ -1,7 +1,6 @@
 <?php
 
 Route::get('/profile', 'ProfileController@index')->name('profile.index');
-
 Route::get('/records', 'RecordController@index')->name('record.index');
 Route::get('/record', 'RecordController@create')->name('record.create');
 

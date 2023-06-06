@@ -2,22 +2,10 @@
 
 namespace App\Listeners;
 
-use App\Events\ReloadRoutes;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
+
 
 class ReloadServer
 {
-    /**
-     * Create the event listener.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
     /**
      * Handle the event.
      *
@@ -25,6 +13,8 @@ class ReloadServer
      */
     public function handle()
     {
-        shell_exec('php /var/www/html/artisan octane:reload');
+        if (array_key_exists('LARAVEL_OCTANE', $_SERVER) && (int) $_SERVER['LARAVEL_OCTANE']) {
+            shell_exec('php /var/www/html/artisan octane:reload');
+        }
     }
 }
