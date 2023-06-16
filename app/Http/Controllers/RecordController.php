@@ -55,8 +55,8 @@ class RecordController extends Controller
         }
 
         $records = $records->orderByRaw("
-            CASE WHEN \"timestamp\" > CURRENT_TIMESTAMP THEN 0 ELSE 1 END,
-            ABS(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP - \"timestamp\"))
+            CASE WHEN " . \DB::getPdo()->quote("timestamp") . " > CURRENT_TIMESTAMP THEN 0 ELSE 1 END,
+            ABS(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP - " . \DB::getPdo()->quote("timestamp") . "))
         ")->paginate(10);
 
         return view('records', [
