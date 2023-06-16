@@ -6,9 +6,11 @@ use App\Events\RecordAdded;
 use App\Models\Record;
 use App\Models\RecordStatus;
 use App\Models\Subscription;
+use App\Models\User;
 use Carbon\Carbon;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Http;
 
 class RecordController extends Controller
@@ -66,6 +68,9 @@ class RecordController extends Controller
     }
 
     public function count($lang, $sub) {
+        /** @var User $user */
+        $user = auth()->user();
+        abort_unless($user->isCoworker() || $user->isAdmin(), Response::HTTP_UNAUTHORIZED);
         return response()->json(['count' => Record::where('subscription_id', $sub)->count()]);
     }
 

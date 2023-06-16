@@ -1,36 +1,39 @@
-function isNumber(value)
-{
-   return typeof value === 'number' && isFinite(value);
-}
+const isNumber = (value) => typeof value === 'number' && isFinite(value);
+const makeRecordCounter = (selector, msg, initialRecords) => {
+    const target = document.querySelector(selector);
 
-let addedCount = 0
-const info = document.getElementById('info')
+    if(!target) return () => null;
 
-const newRecordAdded = () => {
-    if(!info) return
+    let addedCount = 0
 
-    if(info.classList.contains('d-none')) {
-        info.classList.remove('d-none')
+    return (count) => {
+        addedCount = count - initialRecords;
+
+        if(addedCount <= 0) return;
+
+        if(target.classList.contains('d-none')) {
+            target.classList.remove('d-none')
+        }
+
+        target.textContent = msg.replace('#', addedCount.toString())
     }
-
-    const msg = window.lang.addedMsg
-    info.textContent = msg.replace('#', addedCount.toString())
 }
+
+const newRecordsCounter = makeCounter(
+    '#info',
+    window.lang.addedMsg || '#',
+    window.records || 0
+);
+
 
 const pollingSeconds = import.meta.VITE_POLLING_SECONDS * 1000;
-
-const interval = isNumber(pollingSeconds) && !isNaN(pollingSeconds) ? pollingSeconds : 5000;
+const interval = isNumber(pollingSeconds) && !isNaN(pollingSeconds) ? pollingSeconds : 30000;
 
 (function fetchRecordsCount() {
     if(!window.route) return;
 
     fetch(window.route)
     .then(res => res.json())
-    .then(data => {
-        addedCount = data.count - window.records;
-        if(addedCount > 0) {
-            newRecordAdded();
-        }
-    })
+    .then(({ count }) => newRecordsCounter(count))
     .finally(() => setTimeout(fetchRecordsCount, interval))
 })()
