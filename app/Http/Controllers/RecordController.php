@@ -46,7 +46,7 @@ class RecordController extends Controller
                 'subscription_id', $user->subscription->id
             );
 
-            $recordsCount =  Record::where(
+            $recordsCount = Record::where(
                 'subscription_id',
                 Subscription::find($user->subscription_id)->id
             )->count();
@@ -58,16 +58,16 @@ class RecordController extends Controller
 
         if ($driver === 'mysql') {
             $records = $records->orderByRaw("
-                CASE WHEN `timestamp` > CURRENT_TIMESTAMP() THEN 0 ELSE 1 END,
-                ABS(TIMESTAMPDIFF(SECOND, `timestamp`, CURRENT_TIMESTAMP()))
+                CASE WHEN `recorded_to` > CURRENT_TIMESTAMP() THEN 0 ELSE 1 END,
+                ABS(TIMESTAMPDIFF(SECOND, CURRENT_TIMESTAMP(), `recorded_to`))
             ")->paginate(10);
         } elseif ($driver === 'pgsql') {
             $records = $records->orderByRaw("
-                CASE WHEN \"timestamp\" > CURRENT_TIMESTAMP THEN 0 ELSE 1 END,
-                ABS(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP - \"timestamp\"))
+                CASE WHEN \"recorded_to\" > CURRENT_TIMESTAMP THEN 0 ELSE 1 END,
+                ABS(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP - \"recorded_to\"))
             ")->paginate(10);
         } else {
-            $records = $records->orderBy('timestamp', 'DESC')->paginate(10);
+            $records = $records->orderBy('recorded_to', 'DESC')->paginate(10);
         }
 
         return view('records', [
@@ -129,7 +129,7 @@ class RecordController extends Controller
 
         Subscription::find($data['subscription'])->records()->create([
             'title' => $data['title'],
-            'timestamp' => $date,
+            'recorded_to' => $date,
             'duration' => $data['duration'],
             'lits' => $data['lits'],
             'user_id' => auth()->user()->id,

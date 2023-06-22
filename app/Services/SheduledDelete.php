@@ -10,7 +10,7 @@ use Storage;
 class SheduledDelete {
     public static function deleteRecords(Carbon $ltTime)
     {
-        return Record::where('timestamp', '<', $ltTime)->delete();
+        return Record::where('recorded_to', '<', $ltTime)->delete();
     }
 
     public static function deleteUsers(Carbon $ltTime)

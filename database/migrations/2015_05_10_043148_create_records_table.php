@@ -18,7 +18,7 @@ return new class extends Migration
         Schema::create('records', function (Blueprint $table) {
             $table->id();
             $table->string('title');
-            $table->timestamp('timestamp');
+            $table->timestamp('recorded_to')->nullable()->default(null);
             $table->integer('duration');
             $table->foreignIdFor(Subscription::class)->constrained();
             $table->foreignIdFor(User::class)->constrained();

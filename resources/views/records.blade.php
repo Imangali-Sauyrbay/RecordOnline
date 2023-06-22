@@ -87,7 +87,7 @@
     @forelse ($records as $record)
     <div class="row justify-content-center mb-3">
         <div class="col-md-8">
-            <div class="card @if($record->timestamp < now()) text-muted @endif">
+            <div class="card @if($record->recorded_to < now()) text-muted @endif">
                 <div class="card-header"><h4>{{ $record->title }}</h4></div>
 
                 <div class="card-body">
@@ -96,7 +96,7 @@
                     <p>{{__('Group')}}: {{$record->user->group ?? __('null')}}</p>
                     <p>{{__('To Subscription')}}: {{$record->subscription->name}}</p>
                     <p>{{__('Duration')}}: {{$record->duration}} {{__('minutes')}}</p>
-                    <p>{{__('Date')}}: {{$record->timestamp->setTimezone($tz)}}</p>
+                    <p>{{__('Date')}}: {{$record->recorded_to->setTimezone($tz)}}</p>
                     @if ($record->lits)
                         @php
                             $lits = explode(';;;', $record->lits);
@@ -109,7 +109,7 @@
                         </ul>
                     @endif
                     <div class="@if(!auth()->user()->isCoworker())text-end mb-0 @else mb-3 @endif">
-                        <h5><span class="badge rounded-pill text-bg-primary">{{$record->timestamp->setTimezone($tz)->diffForHumans()}}</span></h5>
+                        <h5><span class="badge rounded-pill text-bg-primary">{{$record->recorded_to->setTimezone($tz)->diffForHumans()}}</span></h5>
                     </div>
 
                     @if(auth()->user()->isCoworker())
