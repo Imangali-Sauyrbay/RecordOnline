@@ -1,5 +1,5 @@
 const isNumber = (value) => typeof value === 'number' && isFinite(value);
-const makeRecordCounter = (selector, msg, initialRecords) => {
+const makeCounter = (selector, msg, initialRecords) => {
     const target = document.querySelector(selector);
 
     if(!target) return () => null;
