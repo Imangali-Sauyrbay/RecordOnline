@@ -54,10 +54,21 @@ class RecordController extends Controller
             $records = $records->where('user_id', $user->id);
         }
 
-        $records = $records->orderByRaw("
-            CASE WHEN " . \DB::getPdo()->quote("timestamp") . " > CURRENT_TIMESTAMP THEN 0 ELSE 1 END,
-            ABS(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP - " . \DB::getPdo()->quote("timestamp") . "))
-        ")->paginate(10);
+        $driver = \DB::connection()->getPdo()->getAttribute(\PDO::ATTR_DRIVER_NAME);
+
+        if ($driver === 'mysql') {
+            $records = $records->orderByRaw("
+                CASE WHEN `timestamp` > CURRENT_TIMESTAMP() THEN 0 ELSE 1 END,
+                ABS(TIMESTAMPDIFF(SECOND, `timestamp`, CURRENT_TIMESTAMP()))
+            ")->paginate(10);
+        } elseif ($driver === 'pgsql') {
+            $records = $records->orderByRaw("
+                CASE WHEN \"timestamp\" > CURRENT_TIMESTAMP THEN 0 ELSE 1 END,
+                ABS(EXTRACT(EPOCH FROM CURRENT_TIMESTAMP - \"timestamp\"))
+            ")->paginate(10);
+        } else {
+            $records = $records->orderBy('timestamp', 'DESC')->paginate(10);
+        }
 
         return view('records', [
             'records' => $records,
